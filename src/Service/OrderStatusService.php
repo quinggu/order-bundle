@@ -40,15 +40,16 @@ class OrderStatusService
         $phones = $this->getPhones();
     }
 
-    private function getPhones()
+    private function getPhones(): array
     {
         $senderPhone = $this->order['sender']['phone'];
         $ordererPhone = $this->order['orderer']['phone'];
         $recipientPhone = $this->order['recipient']['phone'];
 
         $this->checkPhone->validate($senderPhone, new PhoneNumber());
+        $this->checkPhone->validate($ordererPhone, new PhoneNumber());
+        $this->checkPhone->validate($recipientPhone, new PhoneNumber());
 
-        $phones = array_unique (array_merge ($senderPhone, $ordererPhone, $recipientPhone));
-
+        return array_unique (array_merge ($senderPhone, $ordererPhone, $recipientPhone));
     }
 }
