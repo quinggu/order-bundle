@@ -36,9 +36,10 @@ class OrderStatusService
 
     private function processChangeStatus(): void
     {
-
-
+        $status = $this->newStatus;
         $phones = $this->getPhones();
+
+        //poinformować serwis "Z" za pomocą API (REST / SOAP) o konieczności wysłania powiadomień na konkretne numery telefonów (niepowtarzające się).
     }
 
     private function getPhones(): array
