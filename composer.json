@@ -1,0 +1,37 @@
+{
+    "name": "quinggu/order-bundle",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Tomek Białczak",
+            "role": "Developer",
+            "email": "tomasz.bialczak@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/quinggu/order-bundle"
+    },
+    "require": {
+        "php": ">=8.1.0",
+        "php-http/guzzle6-adapter": "~2.0.2",
+        "php-http/httplug-bundle": "~1.26.2",
+        "symfony/framework-bundle": "5.4.10",
+        "symfony/validator": "5.4.*",
+        "symfony/yaml": "5.4.*",
+        "eightpoints/guzzle-bundle": "^8.3"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "symfony/debug-bundle": "5.4.*",
+        "symfony/maker-bundle": "^1.43.0",
+        "symfony/profiler-pack": "^1.0.6",
+        "symfony/test-pack": "^1.0.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Quinggu\\OrderBundle\\": "src/"
+        },
+        "exclude-from-classmap": [ "/tests/" ]
+    }
+}
