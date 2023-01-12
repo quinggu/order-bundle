@@ -9,8 +9,6 @@ use Quinggu\OrderBundle\Entity\Order;
 use Quinggu\OrderBundle\Validator\PhoneNumber;
 use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
 
-use function PHPUnit\Framework\throwException;
-
 class OrderStatusService
 {
     private PhoneNumberValidator $checkPhone;
