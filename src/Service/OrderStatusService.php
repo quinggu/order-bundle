@@ -22,7 +22,6 @@ class OrderStatusService
         private readonly CarrierApiClientInterface $apiClient,
         private readonly SmsApiClientInterface $smsClient,
         private readonly EntityManager $entityManager,
-//        private readonly ObjectManager $manager,
     ) {
         $this->phoneNumberValidator = new PhoneNumberValidator();
     }
@@ -32,12 +31,12 @@ class OrderStatusService
         /** @var OrderInterface $order */
         $order = $this->entityManager->getRepository(OrderInterface::class)->findOneBy(['id' => $orderId]);
 
-        $this->validateStatus();
+        $this->validateStatus($newStatus);
 
         if($order->getStatus() != $newStatus){
 //            $order->setStatus($this->newStatus);
-//            $this->manager->persist($order);
-//            $this->manager->flush();
+//            $this->entityManager->persist($order);
+//            $this->entityManager->flush();
             $carrierStatus = $this->apiClient->checkStatus($order->getStatus(), $newStatus)->getBody()->getContents();
             $this->notify($order, $carrierStatus);
         }
@@ -61,10 +60,10 @@ class OrderStatusService
         return array_unique([$order->getSender()->getPhone(), $order->getOrderer()->getPhone(), $order->getRecipient()->getPhone()]);
     }
 
-    protected function validateStatus(): void
+    protected function validateStatus($newStatus): void
     {
-        if (!in_array($this->newStatus, Order::getStatusOptions(), true)) {
-            throw new Exception(sprintf('Unknown status: %s', $this->newStatus));
+        if (!in_array($newStatus, Order::getStatusOptions(), true)) {
+            throw new Exception(sprintf('Unknown status: %s', $newStatus));
         }
     }
 }

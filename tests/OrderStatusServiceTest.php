@@ -3,11 +3,9 @@
 declare(strict_types=1);
 
 use Doctrine\ORM\EntityManager;
-use PHPUnit\Framework\TestCase;
 use Quinggu\OrderBundle\Client\CarrierApiClient;
 use Quinggu\OrderBundle\Client\SmsApiClient;
 use Quinggu\OrderBundle\Entity\Order;
-use Quinggu\OrderBundle\Repository\OrderRepository;
 use Quinggu\OrderBundle\Service\OrderStatusService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

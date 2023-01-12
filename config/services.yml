@@ -1,6 +1,6 @@
 services:
     Quinggu\OrderBundle\Service\OrderStatusService:
         arguments:
-            - Quinggu\OrderBundle\Client\CarrierApiClientInterface
-            - Quinggu\OrderBundle\Client\SmsApiClientInterface
+            - Quinggu\OrderBundle\Client\CarrierApiClient
+            - Quinggu\OrderBundle\Client\SmsApiClient
             - '@doctrine.orm.entity_manager'
