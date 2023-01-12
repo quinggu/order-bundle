@@ -15,7 +15,7 @@ use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
 class OrderStatusService
 {
     private const URL = 'http://api.xxx.pl/api/';
-    private PhoneNumberValidator $checkPhone;
+    private PhoneNumberValidator $phoneNumberValidator;
 
     public function __construct(
         private readonly int $orderId,
@@ -23,69 +23,39 @@ class OrderStatusService
         private readonly CarrierApiClient $apiClient,
         private readonly SmsApiClient $smsClient,
     ) {
-        $this->checkPhone = new PhoneNumberValidator();
+        $this->phoneNumberValidator = new PhoneNumberValidator();
     }
 
     public function checkStatus()
     {
         /** @var OrderInterface $order */
         $order = $this->orderId; //getbyId
-//        $order = $this->getTestOrder();
-        $currentStatus = $order->getStatus();
 
         $this->validateStatus();
 
-        if($currentStatus != $this->newStatus){
-            $order->setStatus($this->newStatus);
-            $this->notify($order);
+        if($order->getStatus() != $this->newStatus){
+//            $order->setStatus($this->newStatus);
+            $carrierStatus = $this->apiClient->checkStatus($order->getStatus(), $this->newStatus);
+            $this->notify($order, $carrierStatus);
         }
 
         return 'Status OK';
     }
 
-    private function notify(OrderInterface $order): void
+    private function notify(OrderInterface $order, $carrierStatus)
     {
-        $status = $this->newStatus;
-        $phones = $this->getPhones();
-        $response = $this->apiClient->checkStatus('dsds', 'dsad');
-        $response = $this->smsClient->sendSms('dsadas', []);
+        $phoneNumbers = $this->getPhoneNumbers($order);
+
+        return $this->smsClient->sendSms($carrierStatus, $phoneNumbers);
     }
 
-    private function getPhones(): array
+    private function getPhoneNumbers(OrderInterface $order): array
     {
-        // $order = $this->order;
-        $order = $this->getTestOrder();
-        $senderPhone = $order['sender']['phone'];
-        $ordererPhone = $order['orderer']['phone'];
-        $recipientPhone = $order['recipient']['phone'];
+        $this->phoneNumberValidator->validate($order->getSender()->getPhone(), new PhoneNumber());
+        $this->phoneNumberValidator->validate($order->getOrderer()->getPhone(), new PhoneNumber());
+        $this->phoneNumberValidator->validate($order->getRecipient()->getPhone(), new PhoneNumber());
 
-        $this->checkPhone->validate($senderPhone, new PhoneNumber());
-        $this->checkPhone->validate($ordererPhone, new PhoneNumber());
-        $this->checkPhone->validate($recipientPhone, new PhoneNumber());
-
-        return array_unique (array_merge ($senderPhone, $ordererPhone, $recipientPhone));
-    }
-
-    private function getTestOrder(): array
-    {
-        return [
-            'status' => 'status',
-            'sender' => [
-                'name' => 'sender',
-                'address' => 'Wawa',
-                'phone' => '+48 333 333 333',
-            ],
-            'orderer' => [
-                'name' => 'orderer',
-                'address' => 'Wrocek',
-                'phone' => '600-600-600',
-            ],
-            'recipient' => [
-                'name' => 'recipient',
-                'address' => 'Łódź',
-                'phone' => '(+48)233233233',
-            ],
-        ];
+        return array_unique([$order->getSender()->getPhone(), $order->getOrderer()->getPhone(), $order->getRecipient()->getPhone()]);
     }
 
     protected function validateStatus(): void
