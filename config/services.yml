@@ -1,5 +1,6 @@
 services:
     Quinggu\OrderBundle\Service\OrderStatusService:
+        class: Quinggu\OrderBundle\Service\OrderStatusService
         arguments:
             - ~
             - ~
