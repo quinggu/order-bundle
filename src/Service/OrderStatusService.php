@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Quinggu\OrderBundle\Service;
 
-use Quinggu\OrderBundle\StatusDefaults;
+use Exception;
+use Quinggu\OrderBundle\Entity\Order;
 use Quinggu\OrderBundle\Validator\PhoneNumber;
 use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
+
+use function PHPUnit\Framework\throwException;
 
 class OrderStatusService
 {
@@ -24,6 +27,10 @@ class OrderStatusService
 //        $order = $this->order;
         $order = $this->getTestOrder();
         $status = $order['status'];
+
+        if(!in_array($this->newStatus, Order::getStatusOptions(), true)){
+            throw new Exception(sprintf('Unknown status: %s', $this->newStatus));
+        }
 
         if($status == $this->newStatus){
             return 'Status OK';
