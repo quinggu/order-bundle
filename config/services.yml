@@ -1,6 +1,5 @@
 services:
     Quinggu\OrderBundle\Service\OrderStatusService:
-        class: Quinggu\OrderBundle\Service\OrderStatusService
         arguments:
             - Quinggu\OrderBundle\Client\CarrierApiClientInterface
             - Quinggu\OrderBundle\Client\SmsApiClientInterface
