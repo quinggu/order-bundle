@@ -1,0 +1,8 @@
+services:
+    Quinggu\OrderBundle\Service\OrderStatusService:
+        arguments:
+            - ~
+            - ~
+            - Quinggu\OrderBundle\Client\CarrierApiClientInterface
+            - Quinggu\OrderBundle\Client\SmsApiClientInterface
+            - Quinggu\OrderBundle\Repository\OrderRepositoryInterface

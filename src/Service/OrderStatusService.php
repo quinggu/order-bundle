@@ -8,7 +8,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\Persistence\ObjectManager;
 use Quinggu\OrderBundle\Client\CarrierApiClientInterface;
-use Quinggu\OrderBundle\Client\SmsApiClient;
+use Quinggu\OrderBundle\Client\SmsApiClientInterface;
 use Quinggu\OrderBundle\Entity\Order;
 use Quinggu\OrderBundle\Model\OrderInterface;
 use Quinggu\OrderBundle\Repository\OrderRepositoryInterface;
@@ -23,7 +23,7 @@ class OrderStatusService
         private readonly int $orderId,
         private readonly string $newStatus,
         private readonly CarrierApiClientInterface $apiClient,
-        private readonly SmsApiClient $smsClient,
+        private readonly SmsApiClientInterface $smsClient,
         private readonly OrderRepositoryInterface $orderRepository,
 //        private readonly ObjectManager $manager,
     ) {
