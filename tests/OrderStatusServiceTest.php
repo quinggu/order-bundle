@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Quinggu\OrderBundle\Entity\Order;
+use Quinggu\OrderBundle\Client\CarrierApiClient;
+use Quinggu\OrderBundle\Client\SmsApiClient;
+use Quinggu\OrderBundle\Repository\OrderRepository;
 use Quinggu\OrderBundle\Service\OrderStatusService;
 
 class OrderStatusServiceTest extends TestCase
@@ -12,7 +14,7 @@ class OrderStatusServiceTest extends TestCase
 
     public function testCheckStatus(): void
     {
-        $orderStatusService = new OrderStatusService(11, Order::STATUS_PREPARED);
+        $orderStatusService = new OrderStatusService(new CarrierApiClient(), new SmsApiClient(), new OrderRepository());
         $response = $orderStatusService->checkStatus();
         $this->assertSame(200, $response->getStatusCode());
     }

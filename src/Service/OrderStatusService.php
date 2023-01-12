@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Quinggu\OrderBundle\Service;
 
+use Doctrine\ORM\EntityManager;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Doctrine\Persistence\ObjectManager;
 use Quinggu\OrderBundle\Client\CarrierApiClientInterface;
 use Quinggu\OrderBundle\Client\SmsApiClientInterface;
 use Quinggu\OrderBundle\Entity\Order;
 use Quinggu\OrderBundle\Model\OrderInterface;
-use Quinggu\OrderBundle\Repository\OrderRepositoryInterface;
 use Quinggu\OrderBundle\Validator\PhoneNumber;
 use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
 
@@ -20,28 +19,26 @@ class OrderStatusService
     private PhoneNumberValidator $phoneNumberValidator;
 
     public function __construct(
-        private readonly int $orderId,
-        private readonly string $newStatus,
         private readonly CarrierApiClientInterface $apiClient,
         private readonly SmsApiClientInterface $smsClient,
-        private readonly OrderRepositoryInterface $orderRepository,
+        private readonly EntityManager $entityManager,
 //        private readonly ObjectManager $manager,
     ) {
         $this->phoneNumberValidator = new PhoneNumberValidator();
     }
 
-    public function checkStatus()
+    public function checkStatus(int $orderId, string $newStatus)
     {
         /** @var OrderInterface $order */
-        $order = $this->orderRepository->findOneBy(['id' => $this->orderId]);
+        $order = $this->entityManager->getRepository(OrderInterface::class)->getfindOneBy(['id' => $orderId]);
 
         $this->validateStatus();
 
-        if($order->getStatus() != $this->newStatus){
+        if($order->getStatus() != $newStatus){
 //            $order->setStatus($this->newStatus);
 //            $this->manager->persist($order);
 //            $this->manager->flush();
-            $carrierStatus = $this->apiClient->checkStatus($order->getStatus(), $this->newStatus)->getBody()->getContents();
+            $carrierStatus = $this->apiClient->checkStatus($order->getStatus(), $newStatus)->getBody()->getContents();
             $this->notify($order, $carrierStatus);
         }
 

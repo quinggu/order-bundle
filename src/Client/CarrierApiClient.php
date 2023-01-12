@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Quinggu\OrderBundle\Client;
 
-use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 class CarrierApiClient implements CarrierApiClientInterface
 {
     private const URL = 'http://api.carrier.pl/api/';
 
+    private Client $client;
+
     public function __construct(
-        private readonly ClientInterface $client,
-    ) {}
+    ) {
+        $this->client = new Client();
+    }
 
     public function checkStatus(string $currentStatus, string $newStatus): ResponseInterface
     {
