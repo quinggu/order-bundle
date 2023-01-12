@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Quinggu\OrderBundle\Service;
 
 use Exception;
-use Quinggu\OrderBundle\Client\CarrierApiClient;
+use Quinggu\OrderBundle\Client\CarrierApiClientInterface;
 use Quinggu\OrderBundle\Client\SmsApiClient;
 use Quinggu\OrderBundle\Entity\Order;
 use Quinggu\OrderBundle\Model\OrderInterface;
@@ -14,13 +14,12 @@ use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
 
 class OrderStatusService
 {
-    private const URL = 'http://api.xxx.pl/api/';
     private PhoneNumberValidator $phoneNumberValidator;
 
     public function __construct(
         private readonly int $orderId,
         private readonly int $newStatus,
-        private readonly CarrierApiClient $apiClient,
+        private readonly CarrierApiClientInterface $apiClient,
         private readonly SmsApiClient $smsClient,
     ) {
         $this->phoneNumberValidator = new PhoneNumberValidator();
@@ -35,7 +34,7 @@ class OrderStatusService
 
         if($order->getStatus() != $this->newStatus){
 //            $order->setStatus($this->newStatus);
-            $carrierStatus = $this->apiClient->checkStatus($order->getStatus(), $this->newStatus);
+            $carrierStatus = $this->apiClient->checkStatus($order->getStatus(), $this->newStatus)->getBody()->getContents();
             $this->notify($order, $carrierStatus);
         }
 
