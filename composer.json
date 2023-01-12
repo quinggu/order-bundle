@@ -19,6 +19,7 @@
         "symfony/framework-bundle": "5.4.10",
         "symfony/validator": "5.4.*",
         "symfony/yaml": "5.4.*",
+        "symfony/orm-pack": "~2.2.0",
         "eightpoints/guzzle-bundle": "^8.3"
     },
     "require-dev": {
