@@ -30,7 +30,7 @@ class OrderStatusService
     public function checkStatus(int $orderId, string $newStatus)
     {
         /** @var OrderInterface $order */
-        $order = $this->entityManager->getRepository(OrderInterface::class)->getfindOneBy(['id' => $orderId]);
+        $order = $this->entityManager->getRepository(OrderInterface::class)->findOneBy(['id' => $orderId]);
 
         $this->validateStatus();
 
