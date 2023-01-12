@@ -5,26 +5,31 @@ declare(strict_types=1);
 namespace Quinggu\OrderBundle\Service;
 
 use Exception;
-use Quinggu\OrderBundle\Entity\Order;
+use GuzzleHttp\ClientInterface;
+use Quinggu\OrderBundle\Model\OrderInterface;
 use Quinggu\OrderBundle\Validator\PhoneNumber;
 use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
 
 class OrderStatusService
 {
+    private const URL = 'http://api.xxx.pl/api/';
     private PhoneNumberValidator $checkPhone;
 
     public function __construct(
-        private readonly array $order = [],
-        private readonly string $newStatus = ''
+        private readonly int $orderId,
+        private readonly string $newStatus = '',
+        private readonly ClientInterface $client,
+
     ) {
         $this->checkPhone = new PhoneNumberValidator();
     }
 
     public function checkStatus()
     {
-//        $order = $this->order;
-        $order = $this->getTestOrder();
-        $status = $order['status'];
+        /** @var OrderInterface $order */
+        $order = $this->orderId; //getbyId
+//        $order = $this->getTestOrder();
+        $status = $order->getStatus();
 
         if(!in_array($this->newStatus, Order::getStatusOptions(), true)){
             throw new Exception(sprintf('Unknown status: %s', $this->newStatus));
@@ -43,8 +48,17 @@ class OrderStatusService
     {
         $status = $this->newStatus;
         $phones = $this->getPhones();
-
         //poinformować serwis "Z" za pomocą API (REST / SOAP) o konieczności wysłania powiadomień na konkretne numery telefonów (niepowtarzające się).
+        $response = $this->client->request(
+            'GET',
+            self::URL,
+            [
+                'data' => [
+                    'status' => $status,
+                    'phones' => $phones
+                ]
+            ]
+        );
     }
 
     private function getPhones(): array
