@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Quinggu\OrderBundle\Service;
 
 use Exception;
-use GuzzleHttp\ClientInterface;
+use Quinggu\OrderBundle\Client\CarrierApiClient;
+use Quinggu\OrderBundle\Client\SmsApiClient;
+use Quinggu\OrderBundle\Entity\Order;
 use Quinggu\OrderBundle\Model\OrderInterface;
 use Quinggu\OrderBundle\Validator\PhoneNumber;
 use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
@@ -17,9 +19,9 @@ class OrderStatusService
 
     public function __construct(
         private readonly int $orderId,
-        private readonly string $newStatus = '',
-        private readonly ClientInterface $client,
-
+        private readonly int $newStatus,
+        private readonly CarrierApiClient $apiClient,
+        private readonly SmsApiClient $smsClient,
     ) {
         $this->checkPhone = new PhoneNumberValidator();
     }
@@ -29,36 +31,24 @@ class OrderStatusService
         /** @var OrderInterface $order */
         $order = $this->orderId; //getbyId
 //        $order = $this->getTestOrder();
-        $status = $order->getStatus();
+        $currentStatus = $order->getStatus();
 
-        if(!in_array($this->newStatus, Order::getStatusOptions(), true)){
-            throw new Exception(sprintf('Unknown status: %s', $this->newStatus));
+        $this->validateStatus();
+
+        if($currentStatus != $this->newStatus){
+            $order->setStatus($this->newStatus);
+            $this->notify($order);
         }
 
-        if($status == $this->newStatus){
-            return 'Status OK';
-        }
-
-        $this->processChangeStatus();
-
-        return '';
+        return 'Status OK';
     }
 
-    private function processChangeStatus(): void
+    private function notify(OrderInterface $order): void
     {
         $status = $this->newStatus;
         $phones = $this->getPhones();
-        //poinformować serwis "Z" za pomocą API (REST / SOAP) o konieczności wysłania powiadomień na konkretne numery telefonów (niepowtarzające się).
-        $response = $this->client->request(
-            'GET',
-            self::URL,
-            [
-                'data' => [
-                    'status' => $status,
-                    'phones' => $phones
-                ]
-            ]
-        );
+        $response = $this->apiClient->checkStatus('dsds', 'dsad');
+        $response = $this->smsClient->sendSms('dsadas', []);
     }
 
     private function getPhones(): array
@@ -96,5 +86,12 @@ class OrderStatusService
                 'phone' => '(+48)233233233',
             ],
         ];
+    }
+
+    protected function validateStatus(): void
+    {
+        if (!in_array($this->newStatus, Order::getStatusOptions(), true)) {
+            throw new Exception(sprintf('Unknown status: %s', $this->newStatus));
+        }
     }
 }
