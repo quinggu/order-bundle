@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Quinggu\OrderBundle\Client;
 
 use Psr\Http\Message\ResponseInterface;

@@ -7,22 +7,24 @@ namespace Quinggu\OrderBundle\Entity;
 use Quinggu\OrderBundle\Model\OrderInterface;
 use Quinggu\OrderBundle\Model\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Quinggu\OrderBundle\Repository\OrderRepositoryInterface;
 
+#[ORM\Entity(repositoryClass: OrderRepositoryInterface::class)]
 class Order implements OrderInterface
 {
-    public const STATUS_NONE = 0;
-    public const STATUS_PLACED = 1;
-    public const STATUS_IN_PROGRESS = 2;
-    public const STATUS_PREPARED = 3;
-    public const STATUS_IN_DELIVERY = 4;
+    public const STATUS_NONE = 'NONE';
+    public const STATUS_PLACED = 'PLACED';
+    public const STATUS_IN_PROGRESS = 'IN_PROGRESS';
+    public const STATUS_PREPARED = 'PREPARED';
+    public const STATUS_IN_DELIVERY = 'IN_DELIVERY';
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected ?int $id = null;
 
-    #[ORM\Column(name: 'status', type: 'integer', nullable: false, options: ['default' => 0])]
-    protected int $status = 0;
+    #[ORM\Column(name: 'status', type: 'string')]
+    protected string $status = self::STATUS_NONE;
 
     #[ORM\ManyToOne(targetEntity: UserInterface::class)]
     protected ?UserInterface $sender = null;

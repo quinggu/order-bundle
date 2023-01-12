@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Quinggu\OrderBundle\Client;
 
 use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 
-class SmsApiClient
+class SmsApiClient implements SmsApiClientInterface
 {
     private const URL = 'http://api.sms.pl/api/';
 
@@ -12,7 +15,7 @@ class SmsApiClient
         private readonly ClientInterface $client,
     ) {}
 
-    public function sendSms($message, $phones)
+    public function sendSms($message, array $phones): ResponseInterface
     {
         return $this->client->request('POST', self::URL, [$message, $phones]);
     }

@@ -16,7 +16,7 @@ class PhoneNumberValidator extends ConstraintValidator
         }
 
         /** @var PhoneNumber $constraint */
-        if (!preg_match('/^(?<!\w)(\(?(\+|00)?48\)?)?[ -]?\d{3}[ -]?\d{3}[ -]?\d{3}(?!\w)$/', $value)) {
+        if (!preg_match('/^(\(?(\+|00)?48\)?)?[ -]?\d{3}[ -]?\d{3}[ -]?\d{3}$/', $value)) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();

@@ -8,9 +8,9 @@ interface OrderInterface
 {
     public function getId(): ?int;
 
-    public function getStatus(): int;
+    public function getStatus(): string;
 
-    public function setStatus(int $status): self;
+    public function setStatus(string $status): self;
 
     public function getSender(): ?UserInterface;
 

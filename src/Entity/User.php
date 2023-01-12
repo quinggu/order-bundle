@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Quinggu\OrderBundle\Entity;
 
 use Quinggu\OrderBundle\Model\UserInterface;
+use Quinggu\OrderBundle\Repository\UserRepositoryInterface;
 use Quinggu\OrderBundle\Validator;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 class User implements UserInterface
 {
     #[ORM\Column(name: 'id', type: 'integer')]
