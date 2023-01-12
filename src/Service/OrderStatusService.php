@@ -11,7 +11,7 @@ use Quinggu\OrderBundle\Client\CarrierApiClientInterface;
 use Quinggu\OrderBundle\Client\SmsApiClient;
 use Quinggu\OrderBundle\Entity\Order;
 use Quinggu\OrderBundle\Model\OrderInterface;
-use Quinggu\OrderBundle\Repository\OrderRepository;
+use Quinggu\OrderBundle\Repository\OrderRepositoryInterface;
 use Quinggu\OrderBundle\Validator\PhoneNumber;
 use Quinggu\OrderBundle\Validator\PhoneNumberValidator;
 
@@ -19,17 +19,15 @@ class OrderStatusService
 {
     private PhoneNumberValidator $phoneNumberValidator;
 
-    private OrderRepository $orderRepository;
-
     public function __construct(
         private readonly int $orderId,
         private readonly string $newStatus,
         private readonly CarrierApiClientInterface $apiClient,
         private readonly SmsApiClient $smsClient,
+        private readonly OrderRepositoryInterface $orderRepository,
 //        private readonly ObjectManager $manager,
     ) {
         $this->phoneNumberValidator = new PhoneNumberValidator();
-        $this->orderRepository = new OrderRepository();
     }
 
     public function checkStatus()

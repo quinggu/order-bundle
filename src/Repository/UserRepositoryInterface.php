@@ -6,9 +6,11 @@ namespace Quinggu\OrderBundle\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
+use Quinggu\OrderBundle\Entity\User;
 use Quinggu\OrderBundle\Model\UserInterface;
 
 /**
+ * @method User getClassName()
  * @method UserInterface|null find($id)
  * @method UserInterface|null findOneBy(array $criteria, array $orderBy = null)
  * @method UserInterface[] findAll()
