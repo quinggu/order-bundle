@@ -14,20 +14,22 @@ class OrderStatusServiceTest extends KernelTestCase
     //TODO: some tests
 
     private ?EntityManager $entityManager;
+    private ?CarrierApiClient $carrierApi;
+    private ?SmsApiClient $smsApi;
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
+        self::bootKernel();
+        $container = self::getContainer();
 
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager()
-        ;
+        $this->entityManager = $container->get('doctrine')->getManager();
+        $this->carrierApi = $container->get(CarrierApiClient::class);
+        $this->smsApi = $container->get(SmsApiClient::class);
     }
 
     public function testCheckStatus(): void
     {
-        $orderStatusService = new OrderStatusService(new CarrierApiClient(), new SmsApiClient(), $this->entityManager);
+        $orderStatusService = new OrderStatusService($this->carrierApi, $this->smsApi, $this->entityManager);
         $response = $orderStatusService->checkStatus(11, Order::STATUS_PREPARED);
         $this->assertSame(200, $response->getStatusCode());
     }

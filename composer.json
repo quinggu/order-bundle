@@ -14,6 +14,9 @@
     },
     "require": {
         "php": ">=8.1.0",
+        "doctrine/doctrine-bundle": "~2.7.0",
+        "doctrine/doctrine-migrations-bundle": "~3.2.2",
+        "gedmo/doctrine-extensions": "~3.7.0",
         "php-http/guzzle6-adapter": "~2.0.2",
         "php-http/httplug-bundle": "~1.26.2",
         "symfony/framework-bundle": "5.4.10",

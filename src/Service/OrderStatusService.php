@@ -38,7 +38,7 @@ class OrderStatusService
 //            $this->entityManager->persist($order);
 //            $this->entityManager->flush();
             $carrierStatus = $this->apiClient->checkStatus($order->getStatus(), $newStatus)->getBody()->getContents();
-            $this->notify($order, $carrierStatus);
+            $this->notify($order, $carrierStatus); // TODO: new service OrderNotifyService?
         }
 
         return 'New status is same like current';
